@@ -243,6 +243,7 @@ assert_previous_height(Node) ->
 %% To assert the target calculation we need DeltaHeight headers counted
 %% backwards from the node we want to assert. If Height <= DeltaHeight
 %% we will need all headers back to genesis.
+%% TODO: redo to jump to prev key block
 assert_calculated_target(Node) ->
     case db_find_node(prev_hash(Node)) of
         error -> ok;
