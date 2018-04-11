@@ -18,6 +18,10 @@
 
 -define(PUB_SIZE, 65).
 
+%% -- Running contract code off chain ---------------------------------------
+
+%% TODO: replace language string with vm_version number.
+
 call(<<"ring">>, Code, Function, Argument) ->
     aect_ring:simple_call(Code, Function, Argument);
 call(<<"evm">>, Code, _, Argument) ->
@@ -25,6 +29,7 @@ call(<<"evm">>, Code, _, Argument) ->
 call(_, _, _, _) ->
     {error, <<"Unknown call ABI">>}.
 
+%% TODO: replace language string with vm_version number.
 
 encode_call_data(<<"ring">>, Code, Function, Argument) ->
     aect_ring:encode_call_data(Code, Function, Argument);
@@ -34,7 +39,7 @@ encode_call_data(_, _, _, _) ->
     {error, <<"Unknown call ABI">>}.
 
 
-%% -- Running contract code --------------------------------------------------
+%% -- Running contract code on chain ---------------------------------------
 
 
 %% Call the contract and update the call object with the return value and gas
