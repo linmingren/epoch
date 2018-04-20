@@ -32,7 +32,9 @@ encode_call(FunctionHandle, ArgumentAst) ->
     %% TODO: Verify that the type matches the function signature.
     Data.
 
-ast_to_erlang({int, _, N}) -> N.
+ast_to_erlang({int, _, N}) -> N;
+ast_to_erlang({tuple, _, Elems}) ->
+    list_to_tuple(lists:map(fun ast_to_erlang/1, Elems)).
 
 encode_function(_Contract, Function) ->
      << <<X>> || X <- Function>>.
@@ -47,7 +49,7 @@ get_type(B) when is_binary(B) ->
 get_type([]) -> nil;
 get_type([E|_]) ->
     {list, get_type(E)}.
-    
+
 
 
 
