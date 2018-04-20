@@ -24,11 +24,18 @@ create_calldata(Contract, Function, Argument) ->
             {error, argument_syntax_error}
     end.
 
-encode_call(FunctionHandle, ArgumentAst) ->
-    Argument = ast_to_erlang(ArgumentAst),
-    Call = {FunctionHandle, Argument},
+%% Use a tuple to pass multiple arguments. TODO: impossible to pass a single
+%% tuple argument.
+encode_call(FunctionHandle, {tuple, _, Elems}) ->
+    encode_call1(FunctionHandle, Elems);
+encode_call(FunctionHandle, Arg) ->
+    encode_call1(FunctionHandle, [Arg]).
+
+encode_call1(FunctionHandle, ArgumentAsts) ->
+    Arguments = lists:map(fun ast_to_erlang/1, ArgumentAsts),
+    Call = list_to_tuple([FunctionHandle | Arguments]),
     {0, Data} = aeso_data:to_binary(Call),
-    _ArgumentType = get_type(Argument),
+    _ArgumentTypes = lists:map(fun get_type/1, Arguments),
     %% TODO: Verify that the type matches the function signature.
     Data.
 
